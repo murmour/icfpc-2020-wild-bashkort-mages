@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cd app
-app "$@" || echo "run error code: $?"
+./app "$@" || echo "run error code: $?"
