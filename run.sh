@@ -1,3 +1,4 @@
 #!/bin/sh
 
-app/app "$@" || echo "run error code: $?"
+cd app
+app "$@" || echo "run error code: $?"
