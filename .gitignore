@@ -1,0 +1,11 @@
+.vs/
+Debug/
+Release/
+*.analyzed
+*.user
+*.log
+__pycache__/
+.settings/
+*.cmi
+*.cmx
+*.o
