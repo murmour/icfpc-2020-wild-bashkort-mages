@@ -232,9 +232,8 @@ and eval_ap (f: expr) (x: expr) : expr =
 (* Sending
    -------------------------------------------------------------------------- *)
 
-let server_url = "https://icfpc2020-api.testkontur.ru:443"
-let api_key = "d3efa45ecf1044c4832921884ea217a4"
-let send_url = server_url ^ "/aliens/send?apiKey=" ^ api_key
+let server_url = "https://api.pegovka.space"
+let send_url = server_url ^ "/aliens/send"
 
 
 let rec modem (e: expr) : expr =

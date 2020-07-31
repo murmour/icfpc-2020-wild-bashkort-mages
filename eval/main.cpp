@@ -700,8 +700,7 @@ Node* demodulate(const char *s)
 	return demodulate_rec(s);
 }
 
-const string kAPIKey = "d3efa45ecf1044c4832921884ea217a4";
-const string url_suffix = "/aliens/send?apiKey=d3efa45ecf1044c4832921884ea217a4";
+const string url_suffix = "/aliens/send";
 string arg_url;
 
 constexpr int alien_buffer_size = 1000000;
@@ -1523,7 +1522,7 @@ int main(int argc, char** argv)
 		PlayGame(url, key);
 		return 0;
 	}
-	arg_url = "https://icfpc2020-api.testkontur.ru:443";
+	arg_url = "https://api.pegovka.space:443";
 
 #ifndef SUBMISSION
 #ifndef HTTPLIB
