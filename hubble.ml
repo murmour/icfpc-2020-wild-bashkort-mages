@@ -36,8 +36,6 @@ and stmt = int * expr
 
 and protocol = stmt list
 
-and tprotocol = expr array
-
 
 (* Parsing
    -------------------------------------------------------------------------- *)
@@ -137,7 +135,10 @@ let parse_protocol (s: string) : protocol =
 (* Loading galaxy
    -------------------------------------------------------------------------- *)
 
-let tabulate (p: protocol) : (int, int) HT.t * tprotocol =
+type tprotocol = expr array
+
+
+let tabulate (p: protocol) : tprotocol =
   let i = ref 0 in
   let h = HT.create 1000 in
   HT.add h 0 0;
@@ -152,18 +153,17 @@ let tabulate (p: protocol) : (int, int) HT.t * tprotocol =
     let lhs = HT.find h lhs in
     arr.(lhs) <- map rhs
   );
-  (h, arr)
+  arr
 
 
-let ((vars: tprotocol), (galaxy: expr)) =
+let vars: tprotocol =
   let ch = open_in "galaxy.txt" in
   let s = really_input_string ch (in_channel_length ch) in
   close_in ch;
-  let p = parse_protocol s in
-  let (h, vars) = tabulate p in
-  let galaxy_id = 0 in
-  let galaxy_id' = HT.find h galaxy_id in
-  (vars, Sym galaxy_id')
+  s |> parse_protocol |> tabulate
+
+
+let galaxy = Sym 0
 
 
 (* Evaluating
@@ -258,11 +258,11 @@ let rec modulate: expr -> string = function
       let nb = Z.numbits n in
       let mantissa = (nb+3)/4 in
       let bit_count = mantissa*4 in
-      let bits = Bytes.make bit_count '0' in
+      let bits = B.make bit_count '0' in
       for i = 0 to bit_count - 1 do
-        if Z.testbit n i then Bytes.set bits (bit_count-i-1) '1'
+        if Z.testbit n i then B.set bits (bit_count-i-1) '1'
       done;
-      sign ^ S.make mantissa '1' ^ "0" ^ (Bytes.to_string bits)
+      sign ^ S.make mantissa '1' ^ "0" ^ (B.to_string bits)
   | _ ->
       assert false
 
@@ -331,9 +331,8 @@ let http_post ~url ~data : int * string =
 
 
 let send (data: expr) : expr =
-  let data = modem data in
-  let mdata = modulate data in
-  match http_post ~url:send_url ~data:mdata with
+  let data = data |> modem |> modulate in
+  match http_post ~url:send_url ~data with
     | (200, body) ->
         demodulate body
     | (code, body) ->
@@ -402,13 +401,13 @@ let draw_image (i: int) (e: expr) : unit =
       let len_y = !max_y - !min_y + 1 in
       (!min_x, !min_y, len_x, len_y)
   in
-  let mat = A.init len_y (fun _ -> Bytes.make len_x '.') in
+  let mat = A.init len_y (fun _ -> B.make len_x '.') in
   pts |> L.iter (fun (x, y) ->
-    Bytes.set mat.(y - min_y) (x - min_x) '#');
+    B.set mat.(y - min_y) (x - min_x) '#');
   let ch = open_out_bin (sprintf "image_%d.log" i) in
   fprintf ch "@(%d, %d)\n" min_x min_y;
   mat |> A.iter (fun s ->
-    fprintf ch "%s\n" (Bytes.to_string s));
+    fprintf ch "%s\n" (B.to_string s));
   close_out ch
 
 
