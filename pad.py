@@ -5,6 +5,7 @@ from subprocess import Popen, PIPE
 import atexit
 import re
 import sys
+from itertools import chain, cycle
 
 
 eval_path = sys.argv[1]
@@ -109,10 +110,12 @@ def update_single_image():
     y_pixels = len_y*pixel_size
     canvas.config(width=x_pixels, height=y_pixels)
     canvas.create_rectangle(0, 0, x_pixels, y_pixels, fill='white')
+
     for i in range(min_x, min_x+len_x):
         for j in range(min_y, min_y+len_y):
             if (image_idx, i, j) in pixels:
                 draw_pixel(i-min_x, j-min_y, 'black')
+
     text = f'Image {image_idx+1}/{len(images)} ({min_x}, {min_y})'
     top_label.config(text=text)
 
@@ -123,15 +126,8 @@ def update_combined_image():
     canvas.config(width=x_pixels, height=y_pixels)
     canvas.create_rectangle(0, 0, x_pixels, y_pixels, fill='white')
 
-    def gen_color():
-        yield 'black'
-        while True:
-            for c in ['green', 'red', 'blue', 'purple', 'brown']:
-                yield c
-    colors = gen_color()
-
-    for _image_idx in reversed(range(len(images))):
-        color = next(colors)
+    colors = chain(['black'], cycle(['green', 'red', 'blue', 'purple', 'brown']))
+    for (_image_idx, color) in zip(reversed(range(len(images))), colors):
         for i in range(min_x, min_x+len_x):
             for j in range(min_y, min_y+len_y):
                 if (_image_idx, i, j) in pixels:
