@@ -60,8 +60,8 @@ Press **E** to learn about **EVAL**.
     ((:debian . "apt install ocaml libzarith-ocaml-dev libcurl-ocaml-dev")
      (:opam . "opam depext -i zarith ocurl")
      (:windows . GOOD-LUCK)))
-  (:build-command "make hubble")
-  (:run-command "./hubble"))
+  (:build-command . "make hubble")
+  (:run-command . "./hubble"))
 ```
 
 **HUBBLE** is a simplified-construction `galaxy` evaluator. Despite simplicity (main loop is around 50 LOCs), it sports good enough speed for the rapid exploration of `galaxy`. A highlight of the design is an exemplary use of the OCaml's `lazy` operator. Also, input variables are tabulated -- compressed into a compact array -- which gives an additional boost.
@@ -75,7 +75,7 @@ Press O to learn about **OCAML**.
 ```lisp
 '((:files . ("pad.py"))
   (:language . Python)
-  (:run-command "python3 pad.py ./hubble"))
+  (:run-command . "python3 pad.py ./hubble"))
 ```
 
 **PAD** is a graphical front-end to **HUBBLE**.
@@ -97,8 +97,8 @@ Trivia:
 ```lisp
 '((:files . ("eval/main.cpp" "eval/botapi.h" "eval/bot.h" "eval/bot.cpp"))
   (:language . C++)
-  (:build-command "cd eval; make eval_release")
-  (:run-command "eval/eval"))
+  (:build-command . "cd eval; make eval_release")
+  (:run-command . "eval/eval"))
 ```
 
 **EVAL** is an advanced-construction `galaxy` evaluator tailored for real-time use.
