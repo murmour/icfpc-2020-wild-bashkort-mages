@@ -227,6 +227,12 @@ and eval_ap (f: expr) (x: expr) : expr =
     | Ap _ | Int _ | Sym _ | Lazy _ -> assert false
 
 
+(* Evaluating globals
+   -------------------------------------------------------------------------- *)
+
+let () = vars |> A.iteri (fun i v -> vars.(i) <- eval v)
+
+
 (* Sending
    -------------------------------------------------------------------------- *)
 
