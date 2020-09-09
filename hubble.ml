@@ -170,8 +170,8 @@ let galaxy = Sym 0
    -------------------------------------------------------------------------- *)
 
 let rec eval: expr -> expr = function
-  | Sym i -> eval (vars.(i))
-  | Lazy e -> eval (Lazy.force e)
+  | Sym i -> vars.(i)
+  | Lazy e -> Lazy.force e
   | Ap (f, x) -> eval_ap f x
   | etc -> etc
 
