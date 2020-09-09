@@ -29,7 +29,7 @@ type expr =
   | Lt | Lt1 of expr
   | Eq | Eq1 of expr
   | T | T1 of expr
-  | F | F1 of expr
+  | F | F1
   | Lazy of expr Lazy.t
 
 and stmt = int * expr
@@ -199,8 +199,8 @@ and eval_ap (f: expr) (x: expr) : expr =
     | Neg -> Int (Z.neg (eval_int x))
     | T -> T1 x
     | T1 a -> eval a
-    | F -> F1 x
-    | F1 _ -> eval b
+    | F -> F1
+    | F1 -> eval b
     | Add -> Add1 x
     | Add1 a -> Int Z.(eval_int a + eval_int b)
     | Mul -> Mul1 x
