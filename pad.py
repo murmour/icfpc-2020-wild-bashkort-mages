@@ -295,7 +295,7 @@ def on_mouse_move(event):
 
     x = event.x // pixel_size
     y = event.y // pixel_size
-    coord_label.config(text=f'x: {x}, y: {y}')
+    coord_label.config(text=f'x: {min_x+x}, y: {min_y+y}')
 
     i = scan_number(x, y)
     if i is None:
