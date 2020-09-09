@@ -355,8 +355,9 @@ let rec extract_list (e: expr) : expr list =
         assert false
 
 
-let rec f38 (protocol: expr) (args: expr) : expr =
-  match extract_list args with
+let rec interact protocol state vector : expr =
+  let response = eval (Ap (Ap (protocol, state), vector)) in
+  match extract_list response with
     | [ flag; state; data ] ->
         begin match flag with
           | Int i when Z.(i = zero) ->
@@ -368,9 +369,6 @@ let rec f38 (protocol: expr) (args: expr) : expr =
         end
     | _ ->
         assert false
-
-and interact protocol state vector : expr =
-  f38 protocol (eval (Ap (Ap (protocol, state), vector)))
 
 
 let extract_point: expr -> int * int = function
