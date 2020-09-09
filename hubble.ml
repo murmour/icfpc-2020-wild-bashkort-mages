@@ -175,8 +175,9 @@ let rec eval: expr -> expr = function
   | Ap (f, x) -> eval_ap f x
   | etc -> etc
 
-and eval_lazy (e: expr) : expr =
-  Lazy (lazy (eval e))
+and eval_lazy: expr -> expr = function
+  | Ap (f, x) -> Lazy (lazy (eval_ap f x))
+  | etc -> etc
 
 and eval_int (e: expr) : Z.t =
   match eval e with
@@ -214,18 +215,15 @@ and eval_ap (f: expr) (x: expr) : expr =
     | S1 a -> S2 (a, b)
     | S2 (a, b) ->
         let c = eval_lazy c in
-        eval_ap (eval_ap a c) (eval_lazy (Ap (b, c)))
+        eval_ap (eval_ap a c) (Lazy (lazy (eval_ap (eval_lazy b) c)))
     | B -> B1 x
     | B1 a -> B2 (a, b)
     | B2 (a, b) ->
-        let c = eval_lazy c in
-        eval_ap a (eval_lazy (Ap (b, c)))
+        eval_ap a (Lazy (lazy (eval_ap b (eval_lazy c))))
     | C -> C1 x
     | C1 a -> C2 (a, b)
     | C2 (a, b) ->
-        let b = eval_lazy b in
-        let c = eval_lazy c in
-        eval_ap (eval_ap a c) b
+        eval_ap (eval_ap a (eval_lazy c)) (eval_lazy b)
     | Ap _ | Int _ | Sym _ | Lazy _ -> assert false
 
 
