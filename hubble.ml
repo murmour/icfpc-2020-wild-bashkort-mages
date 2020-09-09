@@ -215,15 +215,15 @@ and eval_ap (f: expr) (x: expr) : expr =
     | S1 a -> S2 (a, b)
     | S2 (a, b) ->
         let c = eval_lazy c in
-        eval_ap (eval_ap a c) (Lazy (lazy (eval_ap (eval_lazy b) c)))
+        eval_ap (eval_ap a c) (Lazy (lazy (eval_ap b c)))
     | B -> B1 x
     | B1 a -> B2 (a, b)
     | B2 (a, b) ->
-        eval_ap a (Lazy (lazy (eval_ap b (eval_lazy c))))
+        eval_ap a (Lazy (lazy (eval_ap b c)))
     | C -> C1 x
     | C1 a -> C2 (a, b)
     | C2 (a, b) ->
-        eval_ap (eval_ap a (eval_lazy c)) (eval_lazy b)
+        eval_ap (eval_ap a c) b
     | Ap _ | Int _ | Sym _ | Lazy _ -> assert false
 
 
